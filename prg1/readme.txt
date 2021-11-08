@@ -37,34 +37,11 @@ alkiot täytyy laittaa järjestykseen haun jälkeen.
     - tietyn vasallikaupungin haku on lineaarinen (poistoa varten).
 
 
+
+
 Luokan monimutkaisimpien metodejen pseudokoodit:
 
 
-Lisää tietorakenteeseen uuden kaupungin annetulla
-uniikilla id:llä, nimellä, sijainnilla ja verotulolla. Aluksi
-kaupungit eivät ole minkään toisen kaupungin
-vasalleja. Jos annetulla id:llä on jo kaupunki, ei tehdä
-mitään ja palautetaan false, muuten palautetaan
-true.
-bool Datastructures::add_town(TownID /*id*/, const Name &/*name*/, Coord /*coord*/, int /*tax*/)
-{
-
-}
-
-Name Datastructures::get_town_name(TownID /*id*/)
-{
-
-}
-
-Coord Datastructures::get_town_coordinates(TownID /*id*/)
-{
-
-}
-
-int Datastructures::get_town_tax(TownID /*id*/)
-{
-
-}
 
 std::vector<TownID> Datastructures::all_towns()
 {
@@ -135,3 +112,13 @@ int Datastructures::total_net_tax(TownID /*id*/)
 {
 
 }
+
+
+Testataan get_town_name() metodin tehokkuuta, jos kaupungin nimi tallennetaan
+muistiin, ja vältetään unordered_map.find() metodin kahdestin kutsumisen.
+versio 1.
+Name Datastructures::get_town_name(TownID id)
+{
+    return kaupungit.find(id) != kaupungit.end() ? kaupungit.find(id)->second.nimi : NO_NAME;
+}
+Versio 2.

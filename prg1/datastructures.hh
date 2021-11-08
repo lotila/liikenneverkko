@@ -95,28 +95,29 @@ public:
     Datastructures();
     ~Datastructures();
 
-    // Estimate of performance:
-    // Short rationale for estimate:
+    // Estimate of performance: O(1)
+    // Short rationale for estimate: unordered_map.size() metodi on vako aikainen.
     unsigned int town_count();
 
-    // Estimate of performance:
-    // Short rationale for estimate:
+    // Estimate of performance: omega(1). O(n)
+    // Short rationale for estimate: parhaimmassa tapauksessa tietorakenne on tyhjä, jolloin
+    // kutsu on vakio aikainen, muuten kutsutaan unordered_map.clear() metodia, joka on lineaarinen.
     void clear_all();
 
-    // Estimate of performance:
-    // Short rationale for estimate:
+    // Estimate of performance: theta(1), O(n)
+    // Short rationale for estimate: unordered_map haku ja lisäys ovat keskimäärin vakio aikaisia.
     bool add_town(TownID id, Name const& name, Coord coord, int tax);
 
-    // Estimate of performance:
-    // Short rationale for estimate:
+    // Estimate of performance: theta(1), O(n)
+    // Short rationale for estimate: unordered_map haku on keskimäärin vakio aikainen.
     Name get_town_name(TownID id);
 
-    // Estimate of performance:
-    // Short rationale for estimate:
+    // Estimate of performance: theta(1), O(n)
+    // Short rationale for estimate: unordered_map haku on keskimäärin vakio aikainen.
     Coord get_town_coordinates(TownID id);
 
-    // Estimate of performance:
-    // Short rationale for estimate:
+    // Estimate of performance: theta(1), O(n)
+    // Short rationale for estimate: unordered_map haku on keskimäärin vakio aikainen.
     int get_town_tax(TownID id);
 
     // Estimate of performance:
@@ -178,7 +179,16 @@ public:
     int total_net_tax(TownID id);
 
 private:
-    // Add stuff needed for your class implementation here
+    struct kaupunki_data
+    {
+        Name nimi;
+        Coord koordinaatit;
+        int verot;
+        std::vector<TownID> vasalllikaupungit;
+        TownID isantakaupunki;
+    };
+
+    std::unordered_map<TownID, kaupunki_data> kaupungit;
 
 };
 

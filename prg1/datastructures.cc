@@ -28,54 +28,48 @@ Type random_in_range(Type start, Type end)
 // an operation (Commenting out parameter name prevents compiler from
 // warning about unused parameters on operations you haven't yet implemented.)
 
-Datastructures::Datastructures()
+Datastructures::Datastructures() :
+    kaupungit()
 {
-    // Write any initialization you need here
+
 }
 
 Datastructures::~Datastructures()
 {
-    // Write any cleanup you need here
+
 }
 
 unsigned int Datastructures::town_count()
 {
-    // Replace the line below with your implementation
-    throw NotImplemented("town_count()");
+   return kaupungit.size();
 }
 
 void Datastructures::clear_all()
 {
-    // Replace the line below with your implementation
-    throw NotImplemented("clear_all()");
+    if (town_count()==0) return;
+    kaupungit.clear();
 }
 
-bool Datastructures::add_town(TownID /*id*/, const Name &/*name*/, Coord /*coord*/, int /*tax*/)
+bool Datastructures::add_town(TownID id, const Name &name, Coord coord, int tax)
 {
-    // Replace the line below with your implementation
-    // Also uncomment parameters ( /* param */ -> param )
-    throw NotImplemented("add_town()");
+    if (kaupungit.find(id) != kaupungit.end()) return false;
+    kaupungit.insert({id, {name, coord, tax, {}, NO_TOWNID}});
+    return true;
 }
 
-Name Datastructures::get_town_name(TownID /*id*/)
+Name Datastructures::get_town_name(TownID id)
 {
-    // Replace the line below with your implementation
-    // Also uncomment parameters ( /* param */ -> param )
-    throw NotImplemented("get_town_name()");
+    return kaupungit.find(id) != kaupungit.end() ? kaupungit.find(id)->second.nimi : NO_NAME;
 }
 
-Coord Datastructures::get_town_coordinates(TownID /*id*/)
+Coord Datastructures::get_town_coordinates(TownID id)
 {
-    // Replace the line below with your implementation
-    // Also uncomment parameters ( /* param */ -> param )
-    throw NotImplemented("get_town_coordinates()");
+    return kaupungit.find(id) != kaupungit.end() ? kaupungit.find(id)->second.koordinaatit : NO_COORD;
 }
 
-int Datastructures::get_town_tax(TownID /*id*/)
+int Datastructures::get_town_tax(TownID id)
 {
-    // Replace the line below with your implementation
-    // Also uncomment parameters ( /* param */ -> param )
-    throw NotImplemented("get_town_tax()");
+    return kaupungit.find(id) != kaupungit.end() ? kaupungit.find(id)->second.verot : NO_VALUE;
 }
 
 std::vector<TownID> Datastructures::all_towns()
