@@ -1,4 +1,7 @@
-Tomi Lotila
+// Student name: Tomi Lotila
+// Student email: tomi.lotila@tuni.fi
+// Student number: H274802
+
 prg1 dokumentaatio (datastructures luokka)
 
 Luokan päätietorakenne:
@@ -42,25 +45,14 @@ alkiot täytyy laittaa järjestykseen haun jälkeen.
 Luokan monimutkaisimpien metodejen pseudokoodit:
 
 
-
-std::vector<TownID> Datastructures::all_towns()
-{
-
-}
-
-std::vector<TownID> Datastructures::find_towns(const Name &/*name*/)
-{
-
-}
-
-bool Datastructures::change_town_name(TownID /*id*/, const Name &/*newname*/)
-{
-
-}
-
 std::vector<TownID> Datastructures::towns_alphabetically()
 {
-
+    if (kaupungit.size == 0) return {};
+    else
+    std::vector<{Name,TownId}> kaupungit_jäjestyksessä = kaupungit; // siirretään kaupungit vektoriin
+    std::sort(kaupungit_jäjestyksessä); // järjestetään vektorit nimen perusteella
+    std::vector<TownID> palaute = kapunkit_järjestyksessä; // siirretään kaupunkien ID vektoriin ylläpitämällä järjestyksen
+    return palaute;
 }
 
 std::vector<TownID> Datastructures::towns_distance_increasing()

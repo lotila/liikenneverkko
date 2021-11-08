@@ -1,8 +1,8 @@
 // Datastructures.hh
 //
-// Student name:
-// Student email:
-// Student number:
+// Student name: Tomi Lotila
+// Student email: tomi.lotila@tuni.fi
+// Student number: H274802
 
 #ifndef DATASTRUCTURES_HH
 #define DATASTRUCTURES_HH
@@ -120,20 +120,23 @@ public:
     // Short rationale for estimate: unordered_map haku on keskimäärin vakio aikainen.
     int get_town_tax(TownID id);
 
-    // Estimate of performance:
-    // Short rationale for estimate:
+    // Estimate of performance: O(n)
+    // Short rationale for estimate: tietorakenteen luuppaaminen on lineaarinen toiminto.
+    // Loopin sisällä alkion lisäys vektorin loppuun on vakio aikainen, joten ei vaikuta asymptoosiseen tehokkuuteen.
     std::vector<TownID> all_towns();
 
-    // Estimate of performance:
-    // Short rationale for estimate:
+    // Estimate of performance: O(n)
+    // Short rationale for estimate: tietorakenteen luuppaaminen on lineaarinen toiminto.
+    // Loopin sisällä alkion lisäys vektorin loppuun on vakio aikainen, joten ei vaikuta asymptoosiseen tehokkuuteen.
     std::vector<TownID> find_towns(Name const& name);
 
-    // Estimate of performance:
-    // Short rationale for estimate:
+    // Estimate of performance: O(1)
+    // Short rationale for estimate: get_tow_name() ja unordered_map.find() metodit ovat vakio aikaisia.
     bool change_town_name(TownID id, Name const& newname);
 
-    // Estimate of performance:
-    // Short rationale for estimate:
+    // Estimate of performance: theta(1), O(nlog(n))
+    // Short rationale for estimate: parhaimmassa tapauksessa kaupunkeja on nolla, jolloin asymptoottinen tehokkuus on vakio.
+    // Muuten, for-luupien tehokkuus on O(n) ja std::sort algoritmin tehokkuus on O(nlog(n)).
     std::vector<TownID> towns_alphabetically();
 
     // Estimate of performance:
@@ -189,6 +192,14 @@ private:
     };
 
     std::unordered_map<TownID, kaupunki_data> kaupungit;
+
+
+    struct nimi_id
+    {
+        Name nimi;
+        TownID id;
+    };
+
 
 };
 

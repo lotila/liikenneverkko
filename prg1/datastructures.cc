@@ -1,14 +1,16 @@
 // Datastructures.cc
 //
-// Student name:
-// Student email:
-// Student number:
+// Student name: Tomi Lotila
+// Student email: tomi.lotila@tuni.fi
+// Student number: H274802
 
 #include "datastructures.hh"
 
 #include <random>
 
 #include <cmath>
+
+#include <algorithm>
 
 std::minstd_rand rand_engine; // Reasonably quick pseudo-random generator
 
@@ -74,28 +76,43 @@ int Datastructures::get_town_tax(TownID id)
 
 std::vector<TownID> Datastructures::all_towns()
 {
-    // Replace the line below with your implementation
-    throw NotImplemented("all_towns()");
+    std::vector<TownID> kaikki_kaupungit;
+    for (auto& kaupunki : kaupungit )
+        kaikki_kaupungit.push_back(kaupunki.first);
+    return kaikki_kaupungit;
 }
 
-std::vector<TownID> Datastructures::find_towns(const Name &/*name*/)
+std::vector<TownID> Datastructures::find_towns(const Name &name)
 {
-    // Replace the line below with your implementation
-    // Also uncomment parameters ( /* param */ -> param )
-    throw NotImplemented("find_towns()");
+    std::vector<TownID> halutut_kaupungit;
+    for (auto& kaupunki : kaupungit )
+        if (kaupunki.second.nimi == name) halutut_kaupungit.push_back(kaupunki.first);
+    return halutut_kaupungit;
 }
 
-bool Datastructures::change_town_name(TownID /*id*/, const Name &/*newname*/)
+bool Datastructures::change_town_name(TownID id, const Name & newname)
 {
-    // Replace the line below with your implementation
-    // Also uncomment parameters ( /* param */ -> param )
-    throw NotImplemented("change_town_name()");
+    if (get_town_name(id) == NO_NAME) return false;
+    kaupungit.find(id)->second.nimi = newname;
+    return true;
 }
 
 std::vector<TownID> Datastructures::towns_alphabetically()
 {
-    // Replace the line below with your implementation
-    throw NotImplemented("towns_alphabetically()");
+    if (town_count()==0) return std::vector<TownID> {};  // nolla kaupunkia olemassa
+
+    std::vector<nimi_id> kaupungit_jarjestyksesssa;
+    for (auto& kaupunki : kaupungit)
+        kaupungit_jarjestyksesssa.push_back({kaupunki.second.nimi, kaupunki.first});
+
+    std::sort(kaupungit_jarjestyksesssa.begin(),kaupungit_jarjestyksesssa.end(),
+              [](nimi_id tiedot1, nimi_id tiedot2)  { return tiedot1.nimi < tiedot2.nimi;} );
+
+    std::vector<TownID> palaute;
+    for (nimi_id& kaupunki : kaupungit_jarjestyksesssa)
+        palaute.push_back(kaupunki.id);
+
+    return palaute;
 }
 
 std::vector<TownID> Datastructures::towns_distance_increasing()
