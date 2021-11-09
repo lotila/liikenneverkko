@@ -61,17 +61,20 @@ bool Datastructures::add_town(TownID id, const Name &name, Coord coord, int tax)
 
 Name Datastructures::get_town_name(TownID id)
 {
-    return kaupungit.find(id) != kaupungit.end() ? kaupungit.find(id)->second.nimi : NO_NAME;
+    std::unordered_map<TownID, kaupunki_data>::iterator kaupunki = kaupungit.find(id);
+    return kaupunki != kaupungit.end() ? kaupunki->second.nimi : NO_NAME;
 }
 
 Coord Datastructures::get_town_coordinates(TownID id)
 {
-    return kaupungit.find(id) != kaupungit.end() ? kaupungit.find(id)->second.koordinaatit : NO_COORD;
+    std::unordered_map<TownID, kaupunki_data>::iterator kaupunki = kaupungit.find(id);
+    return kaupunki != kaupungit.end() ? kaupunki->second.koordinaatit : NO_COORD;
 }
 
 int Datastructures::get_town_tax(TownID id)
 {
-    return kaupungit.find(id) != kaupungit.end() ? kaupungit.find(id)->second.verot : NO_VALUE;
+    std::unordered_map<TownID, kaupunki_data>::iterator kaupunki = kaupungit.find(id);
+    return kaupunki != kaupungit.end() ? kaupunki->second.verot : NO_VALUE;
 }
 
 std::vector<TownID> Datastructures::all_towns()
@@ -209,7 +212,6 @@ bool Datastructures::remove_town(TownID poistettava_kaupunki)
         for (TownID& isannan_vasallikaupunki : kaupungit.at(isantakaupunki).vasalllikaupungit)
             if (isannan_vasallikaupunki != poistettava_kaupunki)  uudet_vasallikaupungit.push_back(isannan_vasallikaupunki);
         kaupungit.at(isantakaupunki).vasalllikaupungit = uudet_vasallikaupungit;
-
 
         // poistettavalla kaupungilla on vasallikaupunkeja
         if (kaupungit.at(poistettava_kaupunki).vasalllikaupungit.size()!=0)

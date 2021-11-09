@@ -107,11 +107,3 @@ int Datastructures::total_net_tax(TownID /*id*/)
 }
 
 
-Testataan get_town_name() metodin tehokkuuta, jos kaupungin nimi tallennetaan
-muistiin, ja vältetään unordered_map.find() metodin kahdestin kutsumisen.
-versio 1.
-Name Datastructures::get_town_name(TownID id)
-{
-    return kaupungit.find(id) != kaupungit.end() ? kaupungit.find(id)->second.nimi : NO_NAME;
-}
-Versio 2.
