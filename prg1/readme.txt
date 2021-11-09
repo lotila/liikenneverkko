@@ -16,6 +16,7 @@ Luokan päätietorakenne:
 - id lukuja ei ikinä haeta järjestyksessä, joten ei tarvitse pitää järjestyksessä tietorakenteessa.
 - alkioita halutaan monessa eri järjestyksessä (nimen aakkos- ja etäisyysjärjestyksssä), joten
 alkiot täytyy laittaa järjestykseen haun jälkeen.
+- id on jokaiselle kaupungille uniikki.
 - tietorakenteeksi valitaan unordered_map, jossa id on avaimmena ja oma structi kohteena.
     - unordered_map tietorakenteesta avaimmella haku on keskimäärin vakio aikainen.
     - alkion lisäys ja poisto ovat myös keskimäärin vakio aikaisia.

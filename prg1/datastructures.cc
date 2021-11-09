@@ -101,36 +101,73 @@ std::vector<TownID> Datastructures::towns_alphabetically()
 {
     if (town_count()==0) return std::vector<TownID> {};  // nolla kaupunkia olemassa
 
+    // tallennetaan uuteen vektoriin kaupunkien id::eet ja nimet
     std::vector<nimi_id> kaupungit_jarjestyksesssa;
     for (auto& kaupunki : kaupungit)
         kaupungit_jarjestyksesssa.push_back({kaupunki.second.nimi, kaupunki.first});
 
+    // järjestetään vektori nimen mukaan
     std::sort(kaupungit_jarjestyksesssa.begin(),kaupungit_jarjestyksesssa.end(),
               [](nimi_id tiedot1, nimi_id tiedot2)  { return tiedot1.nimi < tiedot2.nimi;} );
 
+    // siirretään järjestetyn vektorin id::eet uuteen vektoriin ja palautetaan se
     std::vector<TownID> palaute;
     for (nimi_id& kaupunki : kaupungit_jarjestyksesssa)
         palaute.push_back(kaupunki.id);
-
     return palaute;
 }
 
 std::vector<TownID> Datastructures::towns_distance_increasing()
 {
-    // Replace the line below with your implementation
-    throw NotImplemented("towns_distance_increasing()");
+    if (town_count()==0) return std::vector<TownID> {};  // nolla kaupunkia olemassa
+
+    // tallennetaan uuteen vektoriin kaupunkien id::eet ja etäisyys origosta
+    std::vector<etaisyys_id> kaupungit_jarjestyksesssa;
+    Coord origo = {0,0};
+    for (auto& kaupunki : kaupungit)
+        kaupungit_jarjestyksesssa.push_back(
+                    {etaisyys_pisteesta(origo, kaupunki.second.koordinaatit),
+                     kaupunki.first});
+
+    // järjestetään vektori etäisyyden mukaan
+    std::sort(kaupungit_jarjestyksesssa.begin(),kaupungit_jarjestyksesssa.end(),
+              [](etaisyys_id tiedot1, etaisyys_id tiedot2)  {return tiedot1.etaisyys<tiedot2.etaisyys;});
+
+    // siirretään järjestetyn vektorin id::eet uuteen vektoriin ja palautetaan se
+    std::vector<TownID> palaute;
+    for (etaisyys_id& kaupunki : kaupungit_jarjestyksesssa)
+        palaute.push_back(kaupunki.id);
+    return palaute;
 }
 
 TownID Datastructures::min_distance()
 {
-    // Replace the line below with your implementation
-    throw NotImplemented("min_distance()");
+    if (town_count()==0) return NO_TOWNID;  // nolla kaupunkia olemassa
+
+    etaisyys_id palaute = {2147483647, NO_TOWNID};
+    Coord origo = {0,0};
+    for (auto& kaupunki : kaupungit)
+    {
+        int etaisyys_origosta = etaisyys_pisteesta(origo, kaupunki.second.koordinaatit);
+        if  (palaute.etaisyys > etaisyys_origosta)
+            palaute = {etaisyys_origosta, kaupunki.first};
+    }
+    return palaute.id;
 }
 
 TownID Datastructures::max_distance()
 {
-    // Replace the line below with your implementation
-    throw NotImplemented("max_distance()");
+    if (town_count()==0) return NO_TOWNID;  // nolla kaupunkia olemassa
+
+    etaisyys_id palaute = {0, NO_TOWNID};
+    Coord origo = {0,0};
+    for (auto& kaupunki : kaupungit)
+    {
+        int etaisyys_origosta = etaisyys_pisteesta(origo, kaupunki.second.koordinaatit);
+        if  (palaute.etaisyys < etaisyys_origosta)
+            palaute = {etaisyys_origosta, kaupunki.first};
+    }
+    return palaute.id;
 }
 
 bool Datastructures::add_vassalship(TownID /*vassalid*/, TownID /*masterid*/)
@@ -180,4 +217,11 @@ int Datastructures::total_net_tax(TownID /*id*/)
     // Replace the line below with your implementation
     // Also uncomment parameters ( /* param */ -> param )
     throw NotImplemented("total_net_tax()");
+}
+
+
+int Datastructures::etaisyys_pisteesta(Coord &lahto, Coord &kohde)
+{
+    return (int)ceil(sqrt((kohde.x - lahto.x)*(kohde.x- lahto.x)
+                         + (kohde.y - lahto.y)*(kohde.y- lahto.y)));
 }
