@@ -157,8 +157,9 @@ public:
     // Short rationale for estimate: unordered_map.find() on keskimäärin vakio aikainen
     std::vector<TownID> get_town_vassals(TownID id);
 
-    // Estimate of performance:
-    // Short rationale for estimate:
+    // Estimate of performance: omega(1), O(n)
+    // Short rationale for estimate: parhaimmassa tapauksessa vakio, jos ei isäntäkaupunkeja.
+    // huonoimmassa tapauksessa käydään läpi kaikki kaupungit, jolloin lineaarinen
     std::vector<TownID> taxer_path(TownID id);
 
     // Non-compulsory phase 1 operations
@@ -206,7 +207,7 @@ private:
 
     int etaisyys_pisteesta(Coord &lahto, Coord &kohde);
 
-
+    void isantakaupungit_rekursio(TownID id, std::vector<TownID>&kaupungit_kertyma);
 
 
 };

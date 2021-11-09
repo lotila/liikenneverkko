@@ -185,11 +185,14 @@ std::vector<TownID> Datastructures::get_town_vassals(TownID id)
     return kaupungit.at(id).vasalllikaupungit;
 }
 
-std::vector<TownID> Datastructures::taxer_path(TownID /*id*/)
+std::vector<TownID> Datastructures::taxer_path(TownID id)
 {
-    // Replace the line below with your implementation
-    // Also uncomment parameters ( /* param */ -> param )
-    throw NotImplemented("taxer_path()");
+    if (kaupungit.find(id) == kaupungit.end()) return std::vector<TownID> {NO_TOWNID};
+
+    std::vector<TownID> palaute;
+    isantakaupungit_rekursio(kaupungit.at(id).isantakaupunki, palaute);
+    return palaute;
+
 }
 
 bool Datastructures::remove_town(TownID /*id*/)
@@ -239,4 +242,14 @@ int Datastructures::etaisyys_pisteesta(Coord &lahto, Coord &kohde)
 {
     return (int)ceil(sqrt((kohde.x - lahto.x)*(kohde.x- lahto.x)
                          + (kohde.y - lahto.y)*(kohde.y- lahto.y)));
+}
+
+
+void Datastructures::isantakaupungit_rekursio(TownID id, std::vector<TownID>&kaupungit_kertyma)
+{
+    if(id == NO_TOWNID) return;
+
+    kaupungit_kertyma.push_back(id);
+    return isantakaupungit(kaupungit.at(id).isantakaupunki, kaupungit_kertyma);
+
 }
