@@ -179,11 +179,10 @@ bool Datastructures::add_vassalship(TownID vassalid, TownID masterid)
     return true;
 }
 
-std::vector<TownID> Datastructures::get_town_vassals(TownID /*id*/)
+std::vector<TownID> Datastructures::get_town_vassals(TownID id)
 {
-    // Replace the line below with your implementation
-    // Also uncomment parameters ( /* param */ -> param )
-    throw NotImplemented("get_town_vassals()");
+    if (kaupungit.find(id) == kaupungit.end()) return std::vector<TownID> {NO_TOWNID};
+    return kaupungit.at(id).vasalllikaupungit;
 }
 
 std::vector<TownID> Datastructures::taxer_path(TownID /*id*/)

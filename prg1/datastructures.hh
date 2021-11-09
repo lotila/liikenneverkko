@@ -149,12 +149,12 @@ public:
     // Short rationale for estimate: for-looppi on lineaarinen
     TownID max_distance();
 
-    // Estimate of performance:
-    // Short rationale for estimate:
+    // Estimate of performance: O(1)
+    // Short rationale for estimate: unordered_map.find() on keskimäärin vakio aikainen
     bool add_vassalship(TownID vassalid, TownID masterid);
 
-    // Estimate of performance:
-    // Short rationale for estimate:
+    // Estimate of performance: O(1)
+    // Short rationale for estimate: unordered_map.find() on keskimäärin vakio aikainen
     std::vector<TownID> get_town_vassals(TownID id);
 
     // Estimate of performance:
