@@ -144,7 +144,7 @@ TownID Datastructures::min_distance()
 {
     if (town_count()==0) return NO_TOWNID;  // nolla kaupunkia olemassa
 
-    etaisyys_id palaute = {2147483647, NO_TOWNID};
+    etaisyys_id palaute = {2147483647, NO_TOWNID}; // kaupunkien etäisyys on pienempi kuin tämä
     Coord origo = {0,0};
     for (auto& kaupunki : kaupungit)
     {
@@ -159,7 +159,7 @@ TownID Datastructures::max_distance()
 {
     if (town_count()==0) return NO_TOWNID;  // nolla kaupunkia olemassa
 
-    etaisyys_id palaute = {0, NO_TOWNID};
+    etaisyys_id palaute = {0, NO_TOWNID}; // kaupungin etäisyys täytyy olla suurempi kuin 0
     Coord origo = {0,0};
     for (auto& kaupunki : kaupungit)
     {
@@ -198,11 +198,25 @@ bool Datastructures::remove_town(TownID /*id*/)
     throw NotImplemented("remove_town()");
 }
 
-std::vector<TownID> Datastructures::towns_nearest(Coord /*coord*/)
+std::vector<TownID> Datastructures::towns_nearest(Coord coord)
 {
-    // Replace the line below with your implementation
-    // Also uncomment parameters ( /* param */ -> param )
-    throw NotImplemented("towns_nearest()");
+    if (town_count()==0) return std::vector<TownID> {};  // nolla kaupunkia olemassa
+
+    // käydään läpi kaupungit ja lähimmät kaupungit siirretään vektoriin
+    std::vector<TownID> palaute;
+    int pienin_etaisyys = 2147483647; // kaupunkien etäisyys on pienempi kuin tämä
+    for (auto& kaupunki : kaupungit)
+    {
+        int etaisyys = etaisyys_pisteesta(coord, kaupunki.second.koordinaatit);
+        if (pienin_etaisyys > etaisyys) // tyhjennetään lista, jos lähempi kaupunki löytyy
+        {
+            palaute.clear();
+            palaute.push_back(kaupunki.first);
+            pienin_etaisyys = etaisyys;
+        }
+        else if (pienin_etaisyys == etaisyys) palaute.push_back(kaupunki.first); // kaupungeilla on sama etäisyys
+    }
+    return palaute;
 }
 
 std::vector<TownID> Datastructures::longest_vassal_path(TownID /*id*/)

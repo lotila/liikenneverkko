@@ -167,8 +167,9 @@ public:
     // Short rationale for estimate:
     bool remove_town(TownID id);
 
-    // Estimate of performance:
-    // Short rationale for estimate:
+    // Estimate of performance: O(n)
+    // Short rationale for estimate: for-silmukka on lineaarinen.
+    // For-silmukan sisällä oleva vector.clear() on keskimäärin vakio aikainen.
     std::vector<TownID> towns_nearest(Coord coord);
 
     // Estimate of performance:
