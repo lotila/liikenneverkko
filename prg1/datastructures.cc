@@ -170,11 +170,13 @@ TownID Datastructures::max_distance()
     return palaute.id;
 }
 
-bool Datastructures::add_vassalship(TownID /*vassalid*/, TownID /*masterid*/)
+bool Datastructures::add_vassalship(TownID vassalid, TownID masterid)
 {
-    // Replace the line below with your implementation
-    // Also uncomment parameters ( /* param */ -> param )
-    throw NotImplemented("add_vassalship()");
+    if (kaupungit.find(vassalid) == kaupungit.end() or kaupungit.find(masterid) == kaupungit.end()
+            or kaupungit.at(vassalid).isantakaupunki != NO_TOWNID) return false;
+    kaupungit.at(vassalid).isantakaupunki = masterid;
+    kaupungit.at(masterid).vasalllikaupungit.push_back(vassalid);
+    return true;
 }
 
 std::vector<TownID> Datastructures::get_town_vassals(TownID /*id*/)
