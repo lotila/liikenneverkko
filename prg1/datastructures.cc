@@ -195,11 +195,41 @@ std::vector<TownID> Datastructures::taxer_path(TownID id)
 
 }
 
-bool Datastructures::remove_town(TownID /*id*/)
+bool Datastructures::remove_town(TownID poistettava_kaupunki)
 {
-    // Replace the line below with your implementation
-    // Also uncomment parameters ( /* param */ -> param )
-    throw NotImplemented("remove_town()");
+    if (kaupungit.find(poistettava_kaupunki) == kaupungit.end()) return false;
+
+    TownID& isantakaupunki = kaupungit.at(poistettava_kaupunki).isantakaupunki;
+
+    // kaupungilla on isäntäkaupunki, jolle siirretään vasallikaupungit
+    if( isantakaupunki != NO_TOWNID)
+    {
+        // poistetaan poistettava vasallikaupunki isännältä
+        std::vector<TownID> uudet_vasallikaupungit;
+        for (TownID& isannan_vasallikaupunki : kaupungit.at(isantakaupunki).vasalllikaupungit)
+            if (isannan_vasallikaupunki != poistettava_kaupunki)  uudet_vasallikaupungit.push_back(isannan_vasallikaupunki);
+        kaupungit.at(isantakaupunki).vasalllikaupungit = uudet_vasallikaupungit;
+
+
+        // poistettavalla kaupungilla on vasallikaupunkeja
+        if (kaupungit.at(poistettava_kaupunki).vasalllikaupungit.size()!=0)
+        {
+            // isäntäkaupunki saa poistettavan kaupungin vasallit
+            for (TownID& poistettavan_vasallikaupunki : kaupungit.at(poistettava_kaupunki).vasalllikaupungit)
+            {
+                kaupungit.at(poistettavan_vasallikaupunki).isantakaupunki = isantakaupunki;
+                kaupungit.at(isantakaupunki).vasalllikaupungit.push_back(poistettavan_vasallikaupunki);
+            }
+        }
+    }
+    // kaupungilla ei ole isäntäkapunkia, joten vasallikaupungit vapautuvat
+    else
+    {
+        for (TownID& vasallikaupunki : kaupungit.at(poistettava_kaupunki).vasalllikaupungit)
+            kaupungit.at(vasallikaupunki).isantakaupunki = NO_TOWNID;
+    }
+    kaupungit.erase(poistettava_kaupunki);
+    return true;
 }
 
 std::vector<TownID> Datastructures::towns_nearest(Coord coord)
@@ -250,6 +280,6 @@ void Datastructures::isantakaupungit_rekursio(TownID id, std::vector<TownID>&kau
     if(id == NO_TOWNID) return;
 
     kaupungit_kertyma.push_back(id);
-    return isantakaupungit(kaupungit.at(id).isantakaupunki, kaupungit_kertyma);
+    return isantakaupungit_rekursio(kaupungit.at(id).isantakaupunki, kaupungit_kertyma);
 
 }

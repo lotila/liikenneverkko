@@ -164,8 +164,8 @@ public:
 
     // Non-compulsory phase 1 operations
 
-    // Estimate of performance:
-    // Short rationale for estimate:
+    // Estimate of performance: O(n)
+    // Short rationale for estimate: for-silmukat ovat lineaariset ja unordered_map.erase() on lineaarinen
     bool remove_town(TownID id);
 
     // Estimate of performance: O(n)
