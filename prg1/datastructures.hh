@@ -173,8 +173,9 @@ public:
     // For-silmukan sisällä oleva vector.clear() on keskimäärin vakio aikainen.
     std::vector<TownID> towns_nearest(Coord coord);
 
-    // Estimate of performance:
-    // Short rationale for estimate:
+    // Estimate of performance: O(n)
+    // Short rationale for estimate: huonoimmassa tapauksessa lineaarinen,
+    // jolloin kaikki kaupungit ovat tutkitttavan kaupungin vasalleja.
     std::vector<TownID> longest_vassal_path(TownID id);
 
     // Estimate of performance:
@@ -209,6 +210,7 @@ private:
 
     void isantakaupungit_rekursio(TownID id, std::vector<TownID>&kaupungit_kertyma);
 
+    void vasallikaupungit_rekursio(TownID id, std::vector<TownID>&kaupungit_kertyma);
 
 };
 

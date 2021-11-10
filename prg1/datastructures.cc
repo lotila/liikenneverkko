@@ -255,11 +255,13 @@ std::vector<TownID> Datastructures::towns_nearest(Coord coord)
     return palaute;
 }
 
-std::vector<TownID> Datastructures::longest_vassal_path(TownID /*id*/)
+std::vector<TownID> Datastructures::longest_vassal_path(TownID kaupunki)
 {
-    // Replace the line below with your implementation
-    // Also uncomment parameters ( /* param */ -> param )
-    throw NotImplemented("longest_vassal_path()");
+    if (kaupungit.find(kaupunki) == kaupungit.end()) return std::vector<TownID> {NO_TOWNID};
+
+    std::vector<TownID> palaute = {kaupunki};
+    vasallikaupungit_rekursio(kaupunki, palaute);
+    return palaute;
 }
 
 int Datastructures::total_net_tax(TownID /*id*/)
@@ -285,3 +287,29 @@ void Datastructures::isantakaupungit_rekursio(TownID id, std::vector<TownID>&kau
     return isantakaupungit_rekursio(kaupungit.at(id).isantakaupunki, kaupungit_kertyma);
 
 }
+
+
+void Datastructures::vasallikaupungit_rekursio(TownID id, std::vector<TownID>&kaupungit_kertyma)
+{
+    std::vector<TownID>& vasallikaupungit = kaupungit.at(id).vasalllikaupungit;
+    if (vasallikaupungit.empty()) return;
+
+    // käydään läpi vasallikaupunkien vasallit ja pidetään muistissa pisintä
+    std::vector<TownID> lisattavat_vasallit;
+    for (auto& vasallikaupunki : vasallikaupungit)
+    {
+        std::vector<TownID> uudet_vasallit;
+        uudet_vasallit.push_back(vasallikaupunki);
+        vasallikaupungit_rekursio(vasallikaupunki, uudet_vasallit);
+        if (lisattavat_vasallit.size() < uudet_vasallit.size()) lisattavat_vasallit = uudet_vasallit;
+    }
+    for (auto& vasalli : lisattavat_vasallit)
+        kaupungit_kertyma.push_back(vasalli);
+    return;
+}
+
+
+
+
+
+
