@@ -173,13 +173,14 @@ public:
     // For-silmukan sisällä oleva vector.clear() on keskimäärin vakio aikainen.
     std::vector<TownID> towns_nearest(Coord coord);
 
-    // Estimate of performance: O(n)
-    // Short rationale for estimate: huonoimmassa tapauksessa lineaarinen,
-    // jolloin kaikki kaupungit ovat tutkitttavan kaupungin vasalleja.
+    // Estimate of performance: omega(1), O(n)
+    // Short rationale for estimate: Parhaimmassa tapauksessa vakio, kun ei ole vasallikaupunkeja.
+    // huonoimmassa tapauksessa lineaarinen, jossa kaikki kaupungit ovat tutkittavan kaupungin vasalleja.
     std::vector<TownID> longest_vassal_path(TownID id);
 
-    // Estimate of performance:
-    // Short rationale for estimate:
+    // Estimate of performance: omega(1), O(n)
+    // Short rationale for estimate: Parhaimmassa tapauksessa vakio, kun ei ole vasallikaupunkeja.
+    // huonoimmassa tapauksessa lineaarinen, jossa kaikki kaupungit ovat tutkittavan kaupungin vasalleja.
     int total_net_tax(TownID id);
 
 private:
@@ -193,7 +194,6 @@ private:
     };
 
     std::unordered_map<TownID, kaupunki_data> kaupungit;
-
 
     struct nimi_id
     {
@@ -212,6 +212,7 @@ private:
 
     void vasallikaupungit_rekursio(TownID id, std::vector<TownID>&kaupungit_kertyma);
 
+    int verotulo_rekursio(TownID id);
 };
 
 #endif // DATASTRUCTURES_HH

@@ -264,11 +264,13 @@ std::vector<TownID> Datastructures::longest_vassal_path(TownID kaupunki)
     return palaute;
 }
 
-int Datastructures::total_net_tax(TownID /*id*/)
+int Datastructures::total_net_tax(TownID kaupunki)
 {
-    // Replace the line below with your implementation
-    // Also uncomment parameters ( /* param */ -> param )
-    throw NotImplemented("total_net_tax()");
+    if (kaupungit.find(kaupunki) == kaupungit.end()) return NO_VALUE;
+
+    if (kaupungit.at(kaupunki).isantakaupunki == NO_TOWNID)
+        return kaupungit.at(kaupunki).verot + verotulo_rekursio(kaupunki);
+    return 0.9 * kaupungit.at(kaupunki).verot + verotulo_rekursio(kaupunki);
 }
 
 
@@ -285,7 +287,6 @@ void Datastructures::isantakaupungit_rekursio(TownID id, std::vector<TownID>&kau
 
     kaupungit_kertyma.push_back(id);
     return isantakaupungit_rekursio(kaupungit.at(id).isantakaupunki, kaupungit_kertyma);
-
 }
 
 
@@ -294,7 +295,7 @@ void Datastructures::vasallikaupungit_rekursio(TownID id, std::vector<TownID>&ka
     std::vector<TownID>& vasallikaupungit = kaupungit.at(id).vasalllikaupungit;
     if (vasallikaupungit.empty()) return;
 
-    // käydään läpi vasallikaupunkien vasallit ja pidetään muistissa pisintä
+    // käydään läpi vasallikaupunkien vasallit ja pidetään muistissa pisintä jonoa
     std::vector<TownID> lisattavat_vasallit;
     for (auto& vasallikaupunki : vasallikaupungit)
     {
@@ -303,12 +304,22 @@ void Datastructures::vasallikaupungit_rekursio(TownID id, std::vector<TownID>&ka
         vasallikaupungit_rekursio(vasallikaupunki, uudet_vasallit);
         if (lisattavat_vasallit.size() < uudet_vasallit.size()) lisattavat_vasallit = uudet_vasallit;
     }
+    // yhdistetään pisimmän jonon vasallit
     for (auto& vasalli : lisattavat_vasallit)
         kaupungit_kertyma.push_back(vasalli);
     return;
 }
 
-
+int Datastructures::verotulo_rekursio(TownID id)
+{
+    int isannan_verot = 0;
+    for (auto& vasallikaupunki : kaupungit.at(id).vasalllikaupungit)
+    {
+        isannan_verot += 0.1*ceil(kaupungit.at(vasallikaupunki).verot
+                              + verotulo_rekursio(vasallikaupunki));
+    }
+    return isannan_verot;
+}
 
 
 
