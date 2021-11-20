@@ -102,10 +102,13 @@ bool Datastructures::change_town_name(TownID id, const Name & newname)
 
 std::vector<TownID> Datastructures::towns_alphabetically()
 {
-    if (town_count()==0) return std::vector<TownID> {};  // nolla kaupunkia olemassa
+    unsigned int town_amount= town_count();
+    if (town_amount==0) return std::vector<TownID> {};  // nolla kaupunkia olemassa
 
     // tallennetaan uuteen vektoriin kaupunkien id::eet ja nimet
     std::vector<nimi_id> kaupungit_jarjestyksesssa;
+    kaupungit_jarjestyksesssa.reserve(town_amount);
+
     for (auto& kaupunki : kaupungit)
         kaupungit_jarjestyksesssa.push_back({kaupunki.second.nimi, kaupunki.first});
 
@@ -115,6 +118,7 @@ std::vector<TownID> Datastructures::towns_alphabetically()
 
     // siirretään järjestetyn vektorin id::eet uuteen vektoriin ja palautetaan se
     std::vector<TownID> palaute;
+    palaute.reserve(town_amount);
     for (nimi_id& kaupunki : kaupungit_jarjestyksesssa)
         palaute.push_back(kaupunki.id);
     return palaute;
@@ -122,10 +126,13 @@ std::vector<TownID> Datastructures::towns_alphabetically()
 
 std::vector<TownID> Datastructures::towns_distance_increasing()
 {
-    if (town_count()==0) return std::vector<TownID> {};  // nolla kaupunkia olemassa
+    unsigned int town_amount= town_count();
+    if (town_amount==0) return std::vector<TownID> {};  // nolla kaupunkia olemassa
 
     // tallennetaan uuteen vektoriin kaupunkien id::eet ja etäisyys origosta
     std::vector<etaisyys_id> kaupungit_jarjestyksesssa;
+    kaupungit_jarjestyksesssa.reserve(town_amount);
+
     Coord origo = {0,0};
     for (auto& kaupunki : kaupungit)
         kaupungit_jarjestyksesssa.push_back(
@@ -138,6 +145,7 @@ std::vector<TownID> Datastructures::towns_distance_increasing()
 
     // siirretään järjestetyn vektorin id::eet uuteen vektoriin ja palautetaan se
     std::vector<TownID> palaute;
+    palaute.reserve(town_amount);
     for (etaisyys_id& kaupunki : kaupungit_jarjestyksesssa)
         palaute.push_back(kaupunki.id);
     return palaute;

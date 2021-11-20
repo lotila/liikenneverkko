@@ -168,9 +168,8 @@ public:
     // Short rationale for estimate: for-silmukat ovat lineaariset ja unordered_map.erase() on lineaarinen
     bool remove_town(TownID id);
 
-    // Estimate of performance: O(n)
-    // Short rationale for estimate: for-silmukka on lineaarinen.
-    // For-silmukan sisällä oleva vector.clear() on keskimäärin vakio aikainen.
+    // Estimate of performance:  O(nlog(n))
+    // Short rationale for estimate: for-luuppien tehokkuus on O(n) ja std::sort algoritmin tehokkuus on O(nlog(n)).
     std::vector<TownID> towns_nearest(Coord coord);
 
     // Estimate of performance: omega(1), O(n)
