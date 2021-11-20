@@ -274,7 +274,7 @@ int Datastructures::total_net_tax(TownID kaupunki)
 
     if (kaupungit.at(kaupunki).isantakaupunki == NO_TOWNID)
         return kaupungit.at(kaupunki).verot + verotulo_rekursio(kaupunki);
-    return 0.9 * kaupungit.at(kaupunki).verot + verotulo_rekursio(kaupunki);
+    return ceil(0.9*(kaupungit.at(kaupunki).verot + verotulo_rekursio(kaupunki)));
 }
 
 
@@ -319,8 +319,8 @@ int Datastructures::verotulo_rekursio(TownID id)
     int isannan_verot = 0;
     for (auto& vasallikaupunki : kaupungit.at(id).vasalllikaupungit)
     {
-        isannan_verot += 0.1*ceil(kaupungit.at(vasallikaupunki).verot
-                              + verotulo_rekursio(vasallikaupunki));
+        isannan_verot += floor(0.1*(kaupungit.at(vasallikaupunki).verot
+                              + verotulo_rekursio(vasallikaupunki)));
     }
     return isannan_verot;
 }
