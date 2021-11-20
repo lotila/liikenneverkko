@@ -192,7 +192,7 @@ std::vector<TownID> Datastructures::taxer_path(TownID id)
 {
     if (kaupungit.find(id) == kaupungit.end()) return std::vector<TownID> {NO_TOWNID};
 
-    std::vector<TownID> palaute;
+    std::vector<TownID> palaute ={id};
     isantakaupungit_rekursio(kaupungit.at(id).isantakaupunki, palaute);
     return palaute;
 
@@ -236,22 +236,26 @@ bool Datastructures::remove_town(TownID poistettava_kaupunki)
 
 std::vector<TownID> Datastructures::towns_nearest(Coord coord)
 {
-    if (town_count()==0) return std::vector<TownID> {};  // nolla kaupunkia olemassa
+    unsigned int town_amount = town_count();
+    if (town_amount==0) return std::vector<TownID> {};  // nolla kaupunkia olemassa
 
-    // käydään läpi kaupungit ja lähimmät kaupungit siirretään vektoriin
-    std::vector<TownID> palaute;
-    int pienin_etaisyys = 2147483647; // kaupunkien etäisyys on pienempi kuin tämä
+    std::vector<etaisyys_id> kaupungit_jarjestyksessa;
+    kaupungit_jarjestyksessa.reserve(town_amount);
+
+    // kaupungit vektorissa
     for (auto& kaupunki : kaupungit)
-    {
-        int etaisyys = etaisyys_pisteesta(coord, kaupunki.second.koordinaatit);
-        if (pienin_etaisyys > etaisyys) // tyhjennetään lista, jos lähempi kaupunki löytyy
-        {
-            palaute.clear();
-            palaute.push_back(kaupunki.first);
-            pienin_etaisyys = etaisyys;
-        }
-        else if (pienin_etaisyys == etaisyys) palaute.push_back(kaupunki.first); // kaupungeilla on sama etäisyys
-    }
+        kaupungit_jarjestyksessa.push_back({etaisyys_pisteesta(coord,
+                                            kaupunki.second.koordinaatit), kaupunki.first});
+    // järjestetään vektori etäisyyden mukaan
+    std::sort(kaupungit_jarjestyksessa.begin(),kaupungit_jarjestyksessa.end(),
+              [](etaisyys_id tiedot1, etaisyys_id tiedot2)
+    { return tiedot1.etaisyys < tiedot2.etaisyys;} );
+
+    std::vector<TownID> palaute;
+    palaute.reserve(town_amount);
+
+    for (auto& kaupunki : kaupungit_jarjestyksessa)
+        palaute.push_back(kaupunki.id);
     return palaute;
 }
 
