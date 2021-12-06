@@ -189,9 +189,12 @@ public:
     // Short rationale for estimate:
     void clear_roads();
 
-    // Estimate of performance:
-    // Short rationale for estimate:
+    // Estimate of performance: O(n(2))
+    // Short rationale for estimate: Huonoimmassa tapauksessa,
+    // jokaisesta kaupungista on tie jokaiseen muuhun kaupunkiin.
+    // vektorin push_back() on vakioaikainen.
     std::vector<std::pair<TownID, TownID>> all_roads();
+
 
     // Estimate of performance:
     // Short rationale for estimate:
@@ -235,6 +238,7 @@ private:
         int verot;
         std::vector<TownID> vasalllikaupungit;
         TownID isantakaupunki;
+        std::unordered_map<TownID, int> naapurit; // naapurikaupungin id ja etäisyys
     };
 
     std::unordered_map<TownID, kaupunki_data> kaupungit;

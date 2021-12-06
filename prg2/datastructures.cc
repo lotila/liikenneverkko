@@ -346,8 +346,14 @@ void Datastructures::clear_roads()
 
 std::vector<std::pair<TownID, TownID>> Datastructures::all_roads()
 {
-    // Replace the line below with your implementation
-    throw NotImplemented("all_roads()");
+    std::vector<std::pair<TownID, TownID>> tiet;
+
+    for (auto& kaupunki : kaupungit)
+        for (auto& naapuri : kaupunki.second.naapurit)
+            if (kaupunki.first < naapuri.first)
+                tiet.push_back({kaupunki.first, naapuri.first});
+
+    return tiet;
 }
 
 bool Datastructures::add_road(TownID /*town1*/, TownID /*town2*/)
