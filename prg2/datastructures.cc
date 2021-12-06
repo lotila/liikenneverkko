@@ -55,7 +55,7 @@ void Datastructures::clear_all()
 bool Datastructures::add_town(TownID id, const Name &name, Coord coord, int tax)
 {
     if (kaupungit.find(id) != kaupungit.end()) return false;
-    kaupungit.insert({id, {name, coord, tax, {}, NO_TOWNID}});
+    kaupungit.insert({id, {name, coord, tax, {}, NO_TOWNID, {}}});
     return true;
 }
 
@@ -356,11 +356,22 @@ std::vector<std::pair<TownID, TownID>> Datastructures::all_roads()
     return tiet;
 }
 
-bool Datastructures::add_road(TownID /*town1*/, TownID /*town2*/)
+bool Datastructures::add_road(TownID town1, TownID town2)
 {
-    // Replace the line below with your implementation
-    // Also uncomment parameters ( /* param */ -> param )
-    throw NotImplemented("add_road()");
+   auto& kaupungin_1_naapurit = kaupungit.at(town1).naapurit;
+
+   if (kaupungit.end()== kaupungit.find(town1) //kaupunkia 1 ei löydy
+           or kaupungit.end()== kaupungit.find(town2) // kaupunkia 2 ei löydy
+           or kaupungin_1_naapurit.end()
+           != kaupungin_1_naapurit.find((town2))) // kaupunkien väillä on jo tie
+       return false;
+
+   int etaisyys = etaisyys_pisteesta(kaupungit.at(town1).koordinaatit,
+           kaupungit.at(town2).koordinaatit);
+   kaupungin_1_naapurit.insert({town2, etaisyys});
+   kaupungit.at(town2).naapurit.insert({town1, etaisyys});
+
+   return true;
 }
 
 std::vector<TownID> Datastructures::get_roads_from(TownID /*id*/)

@@ -196,8 +196,8 @@ public:
     std::vector<std::pair<TownID, TownID>> all_roads();
 
 
-    // Estimate of performance:
-    // Short rationale for estimate:
+    // Estimate of performance: O(0)
+    // Short rationale for estimate: vakio aikainen, ei käydä kaupunkeja läpi
     bool add_road(TownID town1, TownID town2);
 
     // Estimate of performance:
