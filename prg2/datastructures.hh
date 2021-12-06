@@ -100,8 +100,9 @@ public:
     // Short rationale for estimate: unordered_map.size() metodi on vako aikainen.
     unsigned int town_count();
 
-    // Estimate of performance: O(n)
-    // Short rationale for estimate: kutsutaan unordered_map.clear() metodia, joka on lineaarinen.
+    // Estimate of performance: O(n(2))
+    // Short rationale for estimate: Huonoimmassa tapauksessa,
+    // jokaisesta kaupungista on tie jokaiseen muuhun kaupunkiin.
     void clear_all();
 
     // Estimate of performance: theta(1), O(n)
@@ -185,8 +186,9 @@ public:
 
     // Phase 2 operations
 
-    // Estimate of performance:
-    // Short rationale for estimate:
+    // Estimate of performance: O(n(2))
+    // Short rationale for estimate: Huonoimmassa tapauksessa,
+    // jokaisesta kaupungista on tie jokaiseen muuhun kaupunkiin.
     void clear_roads();
 
     // Estimate of performance: O(n(2))

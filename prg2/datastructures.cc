@@ -49,6 +49,7 @@ unsigned int Datastructures::town_count()
 void Datastructures::clear_all()
 {
     if (town_count()==0) return;
+    clear_roads();
     kaupungit.clear();
 }
 
@@ -340,8 +341,8 @@ int Datastructures::verotulo_rekursio(TownID id)
 
 void Datastructures::clear_roads()
 {
-    // Replace the line below with your implementation
-    throw NotImplemented("clear_roads()");
+    for (auto& kaupunki : kaupungit)
+        kaupunki.second.naapurit.clear();
 }
 
 std::vector<std::pair<TownID, TownID>> Datastructures::all_roads()
