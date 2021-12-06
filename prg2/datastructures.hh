@@ -1,8 +1,8 @@
 // Datastructures.hh
 //
-// Student name:
-// Student email:
-// Student number:
+// Student name: Tomi Lotila
+// Student email: tomi.lotila@tuni.fi
+// Student number: H274802
 
 #ifndef DATASTRUCTURES_HH
 #define DATASTRUCTURES_HH
@@ -95,88 +95,93 @@ public:
     Datastructures();
     ~Datastructures();
 
-    // Estimate of performance:
-    // Short rationale for estimate:
+
+    // Estimate of performance: O(1)
+    // Short rationale for estimate: unordered_map.size() metodi on vako aikainen.
     unsigned int town_count();
 
-    // Estimate of performance:
-    // Short rationale for estimate:
+    // Estimate of performance: O(n)
+    // Short rationale for estimate: kutsutaan unordered_map.clear() metodia, joka on lineaarinen.
     void clear_all();
 
-    // Estimate of performance:
-    // Short rationale for estimate:
+    // Estimate of performance: theta(1), O(n)
+    // Short rationale for estimate: unordered_map haku ja lisäys ovat keskimäärin vakio aikaisia.
     bool add_town(TownID id, Name const& name, Coord coord, int tax);
 
-    // Estimate of performance:
-    // Short rationale for estimate:
+    // Estimate of performance: theta(1), O(n)
+    // Short rationale for estimate: unordered_map haku on keskimäärin vakio aikainen.
     Name get_town_name(TownID id);
 
-    // Estimate of performance:
-    // Short rationale for estimate:
+    // Estimate of performance: theta(1), O(n)
+    // Short rationale for estimate: unordered_map haku on keskimäärin vakio aikainen.
     Coord get_town_coordinates(TownID id);
 
-    // Estimate of performance:
-    // Short rationale for estimate:
+    // Estimate of performance: theta(1), O(n)
+    // Short rationale for estimate: unordered_map haku on keskimäärin vakio aikainen.
     int get_town_tax(TownID id);
 
-    // Estimate of performance:
-    // Short rationale for estimate:
+    // Estimate of performance: O(n)
+    // Short rationale for estimate: tietorakenteen luuppaaminen on lineaarinen toiminto.
+    // Loopin sisällä alkion lisäys vektorin loppuun on vakio aikainen, joten ei vaikuta asymptoosiseen tehokkuuteen.
     std::vector<TownID> all_towns();
 
-    // Estimate of performance:
-    // Short rationale for estimate:
+    // Estimate of performance: O(n)
+    // Short rationale for estimate: tietorakenteen luuppaaminen on lineaarinen toiminto.
+    // Loopin sisällä alkion lisäys vektorin loppuun on vakio aikainen, joten ei vaikuta asymptoosiseen tehokkuuteen.
     std::vector<TownID> find_towns(Name const& name);
 
-    // Estimate of performance:
-    // Short rationale for estimate:
+    // Estimate of performance: O(1)
+    // Short rationale for estimate: get_tow_name() ja unordered_map.find() metodit ovat vakio aikaisia.
     bool change_town_name(TownID id, Name const& newname);
 
-    // Estimate of performance:
-    // Short rationale for estimate:
+    // Estimate of performance:  O(nlog(n))
+    // Short rationale for estimate: for-luuppien tehokkuus on O(n) ja std::sort algoritmin tehokkuus on O(nlog(n)).
     std::vector<TownID> towns_alphabetically();
 
-    // Estimate of performance:
-    // Short rationale for estimate:
+    // Estimate of performance: O(nlog(n))
+    // Short rationale for estimate: for-luuppien tehokkuus on O(n) ja std::sort algoritmin tehokkuus on O(nlog(n)).
     std::vector<TownID> towns_distance_increasing();
 
-    // Estimate of performance:
-    // Short rationale for estimate:
+    // Estimate of performance: O(n)
+    // Short rationale for estimate: for-looppi on lineaarinen
     TownID min_distance();
 
-    // Estimate of performance:
-    // Short rationale for estimate:
+    // Estimate of performance: O(n)
+    // Short rationale for estimate: for-looppi on lineaarinen
     TownID max_distance();
 
-    // Estimate of performance:
-    // Short rationale for estimate:
+    // Estimate of performance: O(1)
+    // Short rationale for estimate: unordered_map.find() on keskimäärin vakio aikainen
     bool add_vassalship(TownID vassalid, TownID masterid);
 
-    // Estimate of performance:
-    // Short rationale for estimate:
+    // Estimate of performance: O(1)
+    // Short rationale for estimate: unordered_map.find() on keskimäärin vakio aikainen
     std::vector<TownID> get_town_vassals(TownID id);
 
-    // Estimate of performance:
-    // Short rationale for estimate:
+    // Estimate of performance: omega(1), O(n)
+    // Short rationale for estimate: parhaimmassa tapauksessa vakio, jos ei isäntäkaupunkeja.
+    // huonoimmassa tapauksessa käydään läpi kaikki kaupungit, jolloin lineaarinen
     std::vector<TownID> taxer_path(TownID id);
 
     // Non-compulsory phase 1 operations
 
-    // Estimate of performance:
-    // Short rationale for estimate:
+    // Estimate of performance: O(n)
+    // Short rationale for estimate: for-silmukat ovat lineaariset ja unordered_map.erase() on lineaarinen
     bool remove_town(TownID id);
 
-    // Estimate of performance:
-    // Short rationale for estimate:
+    // Estimate of performance:  O(nlog(n))
+    // Short rationale for estimate: for-luuppien tehokkuus on O(n) ja std::sort algoritmin tehokkuus on O(nlog(n)).
     std::vector<TownID> towns_nearest(Coord coord);
 
-    // Estimate of performance:
-    // Short rationale for estimate:
+    // Estimate of performance: omega(1), O(n)
+    // Short rationale for estimate: Parhaimmassa tapauksessa vakio, kun ei ole vasallikaupunkeja.
+    // huonoimmassa tapauksessa lineaarinen, jossa kaikki kaupungit ovat tutkittavan kaupungin vasalleja.
     std::vector<TownID> longest_vassal_path(TownID id);
 
-    // Estimate of performance:
-    // Short rationale for estimate:
+    // Estimate of performance: omega(1), O(n)
+    // Short rationale for estimate: Parhaimmassa tapauksessa vakio, kun ei ole vasallikaupunkeja.
+    // huonoimmassa tapauksessa lineaarinen, jossa kaikki kaupungit ovat tutkittavan kaupungin vasalleja.
     int total_net_tax(TownID id);
-
 
     // Phase 2 operations
 
@@ -223,8 +228,35 @@ public:
     Distance trim_road_network();
 
 private:
-    // Add stuff needed for your class implementation here
+    struct kaupunki_data
+    {
+        Name nimi;
+        Coord koordinaatit;
+        int verot;
+        std::vector<TownID> vasalllikaupungit;
+        TownID isantakaupunki;
+    };
 
+    std::unordered_map<TownID, kaupunki_data> kaupungit;
+
+    struct nimi_id
+    {
+        Name nimi;
+        TownID id;
+    };
+    struct etaisyys_id
+    {
+        int etaisyys;
+        TownID id;
+    };
+
+    int etaisyys_pisteesta(Coord &lahto, Coord &kohde);
+
+    void isantakaupungit_rekursio(TownID id, std::vector<TownID>&kaupungit_kertyma);
+
+    void vasallikaupungit_rekursio(TownID id, std::vector<TownID>&kaupungit_kertyma);
+
+    int verotulo_rekursio(TownID id);
 };
 
 #endif // DATASTRUCTURES_HH
