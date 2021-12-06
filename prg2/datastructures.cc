@@ -375,11 +375,16 @@ bool Datastructures::add_road(TownID town1, TownID town2)
    return true;
 }
 
-std::vector<TownID> Datastructures::get_roads_from(TownID /*id*/)
+std::vector<TownID> Datastructures::get_roads_from(TownID id)
 {
-    // Replace the line below with your implementation
-    // Also uncomment parameters ( /* param */ -> param )
-    throw NotImplemented("get_roads_from()");
+    if( kaupungit.end() == kaupungit.find(id)) return {NO_TOWNID};
+
+    auto& naapurit = kaupungit.at(id).naapurit;
+    std::vector<TownID> palaute;
+    palaute.reserve(naapurit.size());
+
+    for (auto& naapuri : naapurit) palaute.push_back(naapuri.first);
+    return palaute;
 }
 
 std::vector<TownID> Datastructures::any_route(TownID /*fromid*/, TownID /*toid*/)
