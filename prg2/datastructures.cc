@@ -345,7 +345,7 @@ int Datastructures::verotulo_rekursio(TownID id)
 void Datastructures::clear_roads()
 {
     for (auto& kaupunki : kaupungit)
-        kaupunki.second.naapurit.clear();// TODO poista osoitin
+        kaupunki.second.naapurit.clear();
 }
 
 std::vector<std::pair<TownID, TownID>> Datastructures::all_roads()
@@ -362,7 +362,8 @@ std::vector<std::pair<TownID, TownID>> Datastructures::all_roads()
 
 bool Datastructures::add_road(TownID town1, TownID town2)
 {
-   auto& kaupungin_1_naapurit = kaupungit.at(town1).naapurit;
+    auto& kaupungin_1_naapurit = kaupungit.at(town1).naapurit;
+    auto& kaupungin_2_naapurit = kaupungit.at(town2).naapurit;
 
    if (kaupungit.end()== kaupungit.find(town1) //kaupunkia 1 ei löydy
            or kaupungit.end()== kaupungit.find(town2) // kaupunkia 2 ei löydy
@@ -373,7 +374,7 @@ bool Datastructures::add_road(TownID town1, TownID town2)
    int etaisyys = etaisyys_pisteesta(kaupungit.at(town1).koordinaatit,
            kaupungit.at(town2).koordinaatit);
    kaupungin_1_naapurit.insert({town2, etaisyys});
-   kaupungit.at(town2).naapurit.insert({town1, etaisyys});
+   kaupungin_2_naapurit.insert({town1, etaisyys});
 
    return true;
 }
@@ -399,11 +400,20 @@ std::vector<TownID> Datastructures::any_route(TownID fromid, TownID toid)
     return bfs_etsii_reitin(fromid, toid);
 }
 
-bool Datastructures::remove_road(TownID /*town1*/, TownID /*town2*/)
+bool Datastructures::remove_road(TownID town1, TownID town2)
 {
-    // Replace the line below with your implementation
-    // Also uncomment parameters ( /* param */ -> param )
-    throw NotImplemented("remove_road()");
+    auto& kaupungin_1_naapurit = kaupungit.at(town1).naapurit;
+    auto& kaupungin_2_naapurit = kaupungit.at(town2).naapurit;
+
+    if (kaupungit.end()== kaupungit.find(town1) //kaupunkia 1 ei löydy
+            or kaupungit.end()== kaupungit.find(town2) // kaupunkia 2 ei löydy
+            or kaupungin_1_naapurit.end()
+            == kaupungin_1_naapurit.find((town2))) // kaupunkien väillä ei ole tietä
+        return false;
+
+    kaupungin_1_naapurit.erase(town2);
+    kaupungin_2_naapurit.erase(town1);
+    return true;
 }
 
 std::vector<TownID> Datastructures::least_towns_route(TownID /*fromid*/, TownID /*toid*/)
