@@ -14,6 +14,7 @@
 #include <limits>
 #include <functional>
 #include <exception>
+#include <memory>
 
 // Types for IDs
 using TownID = std::string;
@@ -202,12 +203,13 @@ public:
     // Short rationale for estimate: vakio aikainen, ei käydä kaupunkeja läpi
     bool add_road(TownID town1, TownID town2);
 
-    // Estimate of performance:
-    // Short rationale for estimate:
+    // Estimate of performance:O(n)
+    // Short rationale for estimate: Huonoimmassa tapauksessa,
+    // jokaisesta kaupungista on tie jokaiseen muuhun kaupunkiin.
     std::vector<TownID> get_roads_from(TownID id);
 
-    // Estimate of performance:
-    // Short rationale for estimate:
+    // Estimate of performance: O(n)
+    // Short rationale for estimate: for-looppi käy kaupungit läpi
     std::vector<TownID> any_route(TownID fromid, TownID toid);
 
     // Non-compulsory phase 2 operations
@@ -233,6 +235,16 @@ public:
     Distance trim_road_network();
 
 private:
+
+
+    enum color {WHITE, GRAY, BLACK};
+
+    struct jaljitus_tiedot
+    {
+        TownID paluu;
+        color vari;
+    };
+
     struct kaupunki_data
     {
         Name nimi;
@@ -241,6 +253,7 @@ private:
         std::vector<TownID> vasalllikaupungit;
         TownID isantakaupunki;
         std::unordered_map<TownID, int> naapurit; // naapurikaupungin id ja etäisyys
+        jaljitus_tiedot jaljitus;
     };
 
     std::unordered_map<TownID, kaupunki_data> kaupungit;
@@ -256,6 +269,7 @@ private:
         TownID id;
     };
 
+
     int etaisyys_pisteesta(Coord &lahto, Coord &kohde);
 
     void isantakaupungit_rekursio(TownID id, std::vector<TownID>&kaupungit_kertyma);
@@ -263,6 +277,8 @@ private:
     void vasallikaupungit_rekursio(TownID id, std::vector<TownID>&kaupungit_kertyma);
 
     int verotulo_rekursio(TownID id);
+
+    std::vector<TownID> bfs_etsii_reitin(TownID& fromid, TownID& toid);
 };
 
 #endif // DATASTRUCTURES_HH

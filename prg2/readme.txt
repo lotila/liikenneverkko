@@ -14,5 +14,13 @@ struct kaupunki_data
     std::vector<TownID> vasalllikaupungit;
     TownID isantakaupunki;
     std::unordered_map<TownID, int> naapurit; // naapurikaupungin id ja etäisyys
+    jaljitus_tiedot jaljitus;
 };
 unordered_mapissa tie yhteydet ja teiden pituudet löydetään tehokkaasti.
+
+Lisättiin graaphin jäljitys tiedot päätietorakenteeseen, structilla:
+struct jaljitus_tiedot
+{
+    TownID paluu;
+    color vari;
+};
