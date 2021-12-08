@@ -18,9 +18,4 @@ struct kaupunki_data
 };
 unordered_mapissa tie yhteydet ja teiden pituudet löydetään tehokkaasti.
 
-Lisättiin graaphin jäljitys tiedot päätietorakenteeseen, structilla:
-struct jaljitus_tiedot
-{
-    TownID paluu;
-    color vari;
-};
+

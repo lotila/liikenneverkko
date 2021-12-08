@@ -199,7 +199,7 @@ public:
     std::vector<std::pair<TownID, TownID>> all_roads();
 
 
-    // Estimate of performance: O(0)
+    // Estimate of performance: O(1)
     // Short rationale for estimate: vakio aikainen, ei käydä kaupunkeja läpi
     bool add_road(TownID town1, TownID town2);
 
@@ -209,13 +209,13 @@ public:
     std::vector<TownID> get_roads_from(TownID id);
 
     // Estimate of performance: O(n)
-    // Short rationale for estimate: for-looppi käy kaupungit läpi
+    // Short rationale for estimate: huonoimmassa tapauksessa kaikki kaupungit on reitillä
     std::vector<TownID> any_route(TownID fromid, TownID toid);
 
     // Non-compulsory phase 2 operations
 
-    // Estimate of performance:
-    // Short rationale for estimate:
+    // Estimate of performance: O(1)
+    // Short rationale for estimate: mappista haku on vakioaikainen
     bool remove_road(TownID town1, TownID town2);
 
     // Estimate of performance:
@@ -239,10 +239,17 @@ private:
 
     enum color {WHITE, GRAY, BLACK};
 
-    struct jaljitus_tiedot
+    struct DFS_jaljitus_tiedot
     {
         TownID paluu;
         color vari;
+    };
+
+    struct BFS_jaljitus_tiedot
+    {
+        TownID paluu;
+        color vari;
+        int etaisyys;
     };
 
     struct kaupunki_data
@@ -253,7 +260,6 @@ private:
         std::vector<TownID> vasalllikaupungit;
         TownID isantakaupunki;
         std::unordered_map<TownID, int> naapurit; // naapurikaupungin id ja etäisyys
-        jaljitus_tiedot jaljitus;
     };
 
     std::unordered_map<TownID, kaupunki_data> kaupungit;
@@ -278,7 +284,8 @@ private:
 
     int verotulo_rekursio(TownID id);
 
-    std::vector<TownID> bfs_etsii_reitin(TownID& fromid, TownID& toid);
+    std::vector<TownID> DFS_etsii_reitin(TownID& fromid, TownID& toid);
+    std::vector<TownID> BFS_etsii_reitin(TownID& fromid, TownID& toid);
 };
 
 #endif // DATASTRUCTURES_HH

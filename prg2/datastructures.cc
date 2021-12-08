@@ -59,7 +59,7 @@ void Datastructures::clear_all()
 bool Datastructures::add_town(TownID id, const Name &name, Coord coord, int tax)
 {
     if (kaupungit.find(id) != kaupungit.end()) return false;
-    kaupungit.insert({id, {name, coord, tax, {}, NO_TOWNID, {}, {NO_TOWNID, WHITE}}});
+    kaupungit.insert({id, {name, coord, tax, {}, NO_TOWNID, {}}});
     return true;
 }
 
@@ -397,7 +397,7 @@ std::vector<TownID> Datastructures::any_route(TownID fromid, TownID toid)
             or kaupungit.end()== kaupungit.find(toid)) // kaupunkia 2 ei löydy
         return {NO_TOWNID};
 
-    return bfs_etsii_reitin(fromid, toid);
+    return DFS_etsii_reitin(fromid, toid);
 }
 
 bool Datastructures::remove_road(TownID town1, TownID town2)
@@ -416,11 +416,13 @@ bool Datastructures::remove_road(TownID town1, TownID town2)
     return true;
 }
 
-std::vector<TownID> Datastructures::least_towns_route(TownID /*fromid*/, TownID /*toid*/)
+std::vector<TownID> Datastructures::least_towns_route(TownID fromid, TownID toid)
 {
-    // Replace the line below with your implementation
-    // Also uncomment parameters ( /* param */ -> param )
-    throw NotImplemented("least_towns_route()");
+    if (kaupungit.end()== kaupungit.find(fromid) //kaupunkia 1 ei löydy
+            or kaupungit.end()== kaupungit.find(toid)) // kaupunkia 2 ei löydy
+        return {NO_TOWNID};
+
+    return BFS_etsii_reitin(fromid, toid);
 }
 
 std::vector<TownID> Datastructures::road_cycle_route(TownID /*startid*/)
@@ -444,10 +446,10 @@ Distance Datastructures::trim_road_network()
 }
 
 
-std::vector<TownID> Datastructures::bfs_etsii_reitin(TownID& fromid, TownID& toid)
+std::vector<TownID> Datastructures::DFS_etsii_reitin(TownID& fromid, TownID& toid)
 {
-    for (auto& kaupunki : kaupungit)
-        kaupunki.second.jaljitus = {NO_TOWNID, WHITE};
+    // reitin varella olleet kaupungit
+    std::unordered_map<TownID, DFS_jaljitus_tiedot> kaudut_kaupungit;
 
     std::stack<TownID> kautavat_kaupungit;
     kautavat_kaupungit.push(fromid);
@@ -456,29 +458,36 @@ std::vector<TownID> Datastructures::bfs_etsii_reitin(TownID& fromid, TownID& toi
     {
         kaupunki = kautavat_kaupungit.top();
         kautavat_kaupungit.pop();
-        if (kaupungit.at(kaupunki).jaljitus.vari == WHITE)
+        if (kaudut_kaupungit.find(kaupunki) == kaudut_kaupungit.end()
+                or kaudut_kaupungit.at(kaupunki).vari == WHITE )
         {
-            kaupungit.at(kaupunki).jaljitus.vari = GRAY;
+            kaudut_kaupungit.insert({kaupunki, {NO_TOWNID, GRAY}});
             kautavat_kaupungit.push(kaupunki);
             for(auto& naapuri : kaupungit.at(kaupunki).naapurit)
             {
-                if (kaupungit.at(naapuri.first).jaljitus.vari == WHITE)
+                if (kaudut_kaupungit.find(naapuri.first) == kaudut_kaupungit.end())
                 {
                     kautavat_kaupungit.push(naapuri.first);
-                    kaupungit.at(naapuri.first).jaljitus.paluu = kaupunki;
+                    kaudut_kaupungit.insert({naapuri.first, {kaupunki, WHITE}});
                 }
             }
         }
     }
     if (kaupunki != toid) return {}; // reittiä ei löytynyt
 
+    // järjestetään reitti vektoriin ja palautetaan
     std::vector<TownID> reitti;
     kaupunki = toid;
     while (kaupunki != NO_TOWNID)
     {
         reitti.push_back(kaupunki);
-        kaupunki = kaupungit.at(kaupunki).jaljitus.paluu;
+        kaupunki = kaudut_kaupungit.at(kaupunki).paluu;
     }
     std::reverse(reitti.begin(), reitti.end());
     return reitti;
+}
+
+std::vector<TownID> Datastructures::BFS_etsii_reitin(TownID& fromid, TownID& toid)
+{
+
 }
