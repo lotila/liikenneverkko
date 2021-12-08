@@ -489,5 +489,37 @@ std::vector<TownID> Datastructures::DFS_etsii_reitin(TownID& fromid, TownID& toi
 
 std::vector<TownID> Datastructures::BFS_etsii_reitin(TownID& fromid, TownID& toid)
 {
+    // reitin varella olleet kaupungit
+    std::unordered_map<TownID, BFS_jaljitus_tiedot> kaudut_kaupungit;
 
+    std::deque<TownID> kautavat_kaupungit;
+    kautavat_kaupungit.push_back(fromid);
+    kaudut_kaupungit.insert({fromid, {NO_TOWNID,GRAY, 0}});
+    TownID kaupunki;
+    while(kautavat_kaupungit.size() != 0)
+    {
+        kaupunki = kautavat_kaupungit.front();
+        kautavat_kaupungit.pop_front();
+        for (auto& naapuri : kaupungit.at(kaupunki).naapurit)
+        {
+            if (kaudut_kaupungit.find(naapuri.first) == kaudut_kaupungit.end())
+            {
+                kaudut_kaupungit.insert({naapuri.first, {kaupunki,GRAY,
+                                                         kaudut_kaupungit.at(kaupunki).etaisyys + 1}});
+                kautavat_kaupungit.push_back(naapuri.first);
+            }
+        }
+    }
+    if (kaudut_kaupungit.at(toid).etaisyys == 0) return {}; // reittiä ei löytynyt
+
+    // järjestetään reitti vektoriin ja palautetaan
+    std::vector<TownID> reitti;
+    kaupunki = toid;
+    while (kaupunki != NO_TOWNID)
+    {
+        reitti.push_back(kaupunki);
+        kaupunki = kaudut_kaupungit.at(kaupunki).paluu;
+    }
+    std::reverse(reitti.begin(), reitti.end());
+    return reitti;
 }

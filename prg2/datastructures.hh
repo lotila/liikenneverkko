@@ -218,8 +218,9 @@ public:
     // Short rationale for estimate: mappista haku on vakioaikainen
     bool remove_road(TownID town1, TownID town2);
 
-    // Estimate of performance:
-    // Short rationale for estimate:
+    // Estimate of performance:O(n)
+    // Short rationale for estimate: Huonoimmassa tapauksessa,
+    // jokaisesta kaupungista on tie jokaiseen muuhun kaupunkiin.
     std::vector<TownID> least_towns_route(TownID fromid, TownID toid);
 
     // Estimate of performance:
