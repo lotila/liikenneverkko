@@ -482,9 +482,7 @@ std::vector<TownID> Datastructures::road_cycle_route(TownID startid)
 
 std::vector<TownID> Datastructures::shortest_route(TownID /*fromid*/, TownID /*toid*/)
 {
-    // Replace the line below with your implementation
-    // Also uncomment parameters ( /* param */ -> param )
-    throw NotImplemented("shortest_route()");
+
 }
 
 Distance Datastructures::trim_road_network()
@@ -498,6 +496,7 @@ std::vector<TownID> Datastructures::DFS_etsii_reitin(TownID& fromid, TownID& toi
 {
     // reitin varella olleet kaupungit
     std::unordered_map<TownID, DFS_jaljitus_tiedot> kaudut_kaupungit;
+    for (auto& kaupunki : kaupungit) kaudut_kaupungit.insert({kaupunki.first, {NO_TOWNID, WHITE}});
 
     std::stack<TownID> kautavat_kaupungit;
     kautavat_kaupungit.push(fromid);
@@ -506,17 +505,16 @@ std::vector<TownID> Datastructures::DFS_etsii_reitin(TownID& fromid, TownID& toi
     {
         kaupunki = kautavat_kaupungit.top();
         kautavat_kaupungit.pop();
-        if (kaudut_kaupungit.find(kaupunki) == kaudut_kaupungit.end()
-                or kaudut_kaupungit.at(kaupunki).vari == WHITE )
+        if (kaudut_kaupungit.at(kaupunki).vari == WHITE)
         {
-            kaudut_kaupungit.insert({kaupunki, {NO_TOWNID, GRAY}});
+            kaudut_kaupungit.at(kaupunki).vari = GRAY;
             kautavat_kaupungit.push(kaupunki);
             for(auto& naapuri : kaupungit.at(kaupunki).naapurit)
             {
-                if (kaudut_kaupungit.find(naapuri.first) == kaudut_kaupungit.end())
+                if (kaudut_kaupungit.at(naapuri.first).vari == WHITE)
                 {
                     kautavat_kaupungit.push(naapuri.first);
-                    kaudut_kaupungit.insert({naapuri.first, {kaupunki, WHITE}});
+                    kaudut_kaupungit.at(naapuri.first).paluu = kaupunki;
                 }
             }
         }
@@ -539,10 +537,11 @@ std::vector<TownID> Datastructures::BFS_etsii_reitin(TownID& fromid, TownID& toi
 {
     // reitin varella olleet kaupungit
     std::unordered_map<TownID, BFS_jaljitus_tiedot> kaudut_kaupungit;
+    for (auto& kaupunki : kaupungit) kaudut_kaupungit.insert({kaupunki.first, {NO_TOWNID, WHITE, 0}});
 
     std::deque<TownID> kautavat_kaupungit;
     kautavat_kaupungit.push_back(fromid);
-    kaudut_kaupungit.insert({fromid, {NO_TOWNID,GRAY, 0}});
+    kaudut_kaupungit.at(fromid).vari = GRAY;
     TownID kaupunki;
     while(kautavat_kaupungit.size() != 0)
     {
@@ -550,10 +549,10 @@ std::vector<TownID> Datastructures::BFS_etsii_reitin(TownID& fromid, TownID& toi
         kautavat_kaupungit.pop_front();
         for (auto& naapuri : kaupungit.at(kaupunki).naapurit)
         {
-            if (kaudut_kaupungit.find(naapuri.first) == kaudut_kaupungit.end())
+            if (kaudut_kaupungit.at(naapuri.first).vari == WHITE)
             {
-                kaudut_kaupungit.insert({naapuri.first, {kaupunki,GRAY,
-                                                         kaudut_kaupungit.at(kaupunki).etaisyys + 1}});
+                kaudut_kaupungit.at(naapuri.first) = {kaupunki, GRAY,
+                        kaudut_kaupungit.at(kaupunki).etaisyys + 1};
                 kautavat_kaupungit.push_back(naapuri.first);
             }
         }
