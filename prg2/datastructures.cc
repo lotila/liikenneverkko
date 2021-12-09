@@ -425,11 +425,59 @@ std::vector<TownID> Datastructures::least_towns_route(TownID fromid, TownID toid
     return BFS_etsii_reitin(fromid, toid);
 }
 
-std::vector<TownID> Datastructures::road_cycle_route(TownID /*startid*/)
+std::vector<TownID> Datastructures::road_cycle_route(TownID startid)
 {
-    // Replace the line below with your implementation
-    // Also uncomment parameters ( /* param */ -> param )
-    throw NotImplemented("road_cycle_route()");
+    if (kaupungit.end()== kaupungit.find(startid)) //kaupunkia 1 ei löydy
+        return {NO_TOWNID};
+
+    // reitin varella olleet kaupungit
+    std::unordered_map<TownID, DFS_jaljitus_tiedot> kaudut_kaupungit;
+    for (auto& kaupunki : kaupungit) kaudut_kaupungit.insert({kaupunki.first, {NO_TOWNID, WHITE}});
+
+    std::stack<TownID> kautavat_kaupungit;
+    kautavat_kaupungit.push(startid);
+    TownID kaupunki;
+    TownID viimenen_kaupunki = NO_TOWNID;
+    bool looppi = true;
+    while(kautavat_kaupungit.size() != 0 and looppi)
+    {
+        kaupunki = kautavat_kaupungit.top();
+        kautavat_kaupungit.pop();
+        if (kaudut_kaupungit.at(kaupunki).vari == WHITE )
+        {
+            kaudut_kaupungit.at(kaupunki).vari = GRAY;
+            kautavat_kaupungit.push(kaupunki);
+            for(auto& naapuri : kaupungit.at(kaupunki).naapurit)
+            {
+                if (kaudut_kaupungit.at(naapuri.first).vari == WHITE)
+                {
+                    kautavat_kaupungit.push(naapuri.first);
+                    kaudut_kaupungit.at(naapuri.first).paluu = kaupunki;
+                }
+                else if (kaudut_kaupungit.at(naapuri.first).vari == GRAY and
+                         naapuri.first != kaudut_kaupungit.at(kaupunki).paluu)
+                {
+                    viimenen_kaupunki = naapuri.first;
+                    looppi = false;
+                    break;
+                }
+            }
+
+        }
+        else kaudut_kaupungit.at(kaupunki).vari = BLACK;
+    }
+    if (looppi) return {}; // sykliä ei löytynyt
+
+    // järjestetään reitti vektoriin ja palautetaan
+    std::vector<TownID> reitti {viimenen_kaupunki};
+
+    while (kaupunki != NO_TOWNID)
+    {
+        reitti.push_back(kaupunki);
+        kaupunki = kaudut_kaupungit.at(kaupunki).paluu;
+    }
+    std::reverse(reitti.begin(), reitti.end());
+    return reitti;
 }
 
 std::vector<TownID> Datastructures::shortest_route(TownID /*fromid*/, TownID /*toid*/)
