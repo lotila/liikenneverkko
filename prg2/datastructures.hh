@@ -223,12 +223,14 @@ public:
     // jokaisesta kaupungista on tie jokaiseen muuhun kaupunkiin.
     std::vector<TownID> least_towns_route(TownID fromid, TownID toid);
 
-    // Estimate of performance:
-    // Short rationale for estimate:
+    // Estimate of performance:O(n)
+    // Short rationale for estimate: Huonoimmassa tapauksessa,
+    // jokaisesta kaupungista on tie jokaiseen muuhun kaupunkiin.
     std::vector<TownID> road_cycle_route(TownID startid);
 
-    // Estimate of performance:
-    // Short rationale for estimate:
+    // Estimate of performance:O(n)
+    // Short rationale for estimate: Huonoimmassa tapauksessa,
+    // jokaisesta kaupungista on tie jokaiseen muuhun kaupunkiin.
     std::vector<TownID> shortest_route(TownID fromid, TownID toid);
 
     // Estimate of performance:
