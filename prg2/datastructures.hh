@@ -15,6 +15,9 @@
 #include <functional>
 #include <exception>
 #include <memory>
+#include <unordered_map>
+#include <unordered_set>
+#include <set>
 
 // Types for IDs
 using TownID = std::string;
@@ -279,6 +282,7 @@ private:
     };
 
 
+
     int etaisyys_pisteesta(Coord &lahto, Coord &kohde);
 
     void isantakaupungit_rekursio(TownID id, std::vector<TownID>&kaupungit_kertyma);
@@ -286,6 +290,7 @@ private:
     void vasallikaupungit_rekursio(TownID id, std::vector<TownID>&kaupungit_kertyma);
 
     int verotulo_rekursio(TownID id);
+    bool etsii_syklin(std::unordered_map<TownID,std::unordered_set<TownID>>& tiet, TownID alotus);
 
     std::vector<TownID> DFS_etsii_reitin(TownID& fromid, TownID& toid);
     std::vector<TownID> BFS_etsii_reitin(TownID& fromid, TownID& toid);

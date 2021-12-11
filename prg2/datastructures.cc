@@ -14,7 +14,6 @@
 
 #include <stack>
 
-#include <set>
 
 std::minstd_rand rand_engine; // Reasonably quick pseudo-random generator
 
@@ -30,10 +29,6 @@ Type random_in_range(Type start, Type end)
     return static_cast<Type>(start+num);
 }
 
-// Modify the code below to implement the functionality of the class.
-// Also remove comments from the parameter names when you implement
-// an operation (Commenting out parameter name prevents compiler from
-// warning about unused parameters on operations you haven't yet implemented.)
 
 Datastructures::Datastructures() :
     kaupungit()
@@ -294,7 +289,7 @@ int Datastructures::total_net_tax(TownID kaupunki)
 
 int Datastructures::etaisyys_pisteesta(Coord &lahto, Coord &kohde)
 {
-    return (int)ceil(sqrt((kohde.x - lahto.x)*(kohde.x- lahto.x)
+    return (int)floor(sqrt((kohde.x - lahto.x)*(kohde.x- lahto.x)
                          + (kohde.y - lahto.y)*(kohde.y- lahto.y)));
 }
 
@@ -539,8 +534,61 @@ std::vector<TownID> Datastructures::shortest_route(TownID fromid, TownID toid)
 
 Distance Datastructures::trim_road_network()
 {
-    // Replace the line below with your implementation
-    throw NotImplemented("trim_road_network()");
+    std::set<std::pair<int, std::pair<TownID, TownID>>> tiet_jarjetyksessa; // pituus järjestyksessä
+    std::vector<std::pair<TownID, TownID>> tiet_sekasin = all_roads();
+
+    for (auto& tie : tiet_sekasin)
+      {
+          tiet_jarjetyksessa.insert({etaisyys_pisteesta(kaupungit.at(tie.first).koordinaatit, kaupungit.at(tie.second).koordinaatit), {tie.first, tie.second}});
+      }
+
+    int teiden_pituus = 0;
+    TownID eka_loutu = NO_TOWNID;
+    TownID toka_loutu = NO_TOWNID;
+    std::unordered_map<TownID,std::unordered_set<TownID>> valitut_kaupungit;
+
+    for (auto& tie : tiet_jarjetyksessa)
+    {
+        eka_loutu = NO_TOWNID;
+        toka_loutu = NO_TOWNID;
+        for (auto& kaupunki : valitut_kaupungit)
+        {
+            if (kaupunki.second.find(tie.second.first) != kaupunki.second.end())
+            {
+                eka_loutu = kaupunki.first;
+            }
+            if (kaupunki.second.find(tie.second.second) != kaupunki.second.end())
+            {
+                toka_loutu = kaupunki.first;
+            }
+        }
+        if (eka_loutu == NO_TOWNID and toka_loutu == NO_TOWNID)
+        {
+            teiden_pituus += tie.first;
+            valitut_kaupungit.insert({tie.second.first, {tie.second.first, tie.second.second}});
+        }
+        else if (eka_loutu == NO_TOWNID)
+        {
+            teiden_pituus += tie.first;
+            valitut_kaupungit.at(toka_loutu).insert(tie.second.first);
+        }
+        else if (toka_loutu == NO_TOWNID)
+        {
+            teiden_pituus += tie.first;
+            valitut_kaupungit.at(eka_loutu).insert(tie.second.second);
+        }
+        else if (eka_loutu == toka_loutu)
+        {
+            remove_road(tie.second.second, tie.second.first);
+        }
+        else
+        {
+            valitut_kaupungit.at(eka_loutu).insert(
+                        valitut_kaupungit.at(toka_loutu).begin(),valitut_kaupungit.at(toka_loutu).end());
+            valitut_kaupungit.erase(toka_loutu);
+        }
+    }
+    return teiden_pituus;
 }
 
 
@@ -622,3 +670,4 @@ std::vector<TownID> Datastructures::BFS_etsii_reitin(TownID& fromid, TownID& toi
     std::reverse(reitti.begin(), reitti.end());
     return reitti;
 }
+
