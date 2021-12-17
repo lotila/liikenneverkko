@@ -3,8 +3,8 @@
 // Student email: tomi.lotila@tuni.fi
 // Student number: H274802
 
-kaupunkiin yhdistyvät tiet säilytetään päätietorakenteessa unordered_mapsissa,
-jossa avaimmena on TownID ja hakutuloksena tien pituus.
+kaupunkien tieyhteydet säilytetään päätietorakenteessa unordered_setissa,
+jossa naapureiden TownID:eet.
 
 struct kaupunki_data
 {
@@ -13,9 +13,7 @@ struct kaupunki_data
     int verot;
     std::vector<TownID> vasalllikaupungit;
     TownID isantakaupunki;
-    std::unordered_map<TownID, int> naapurit; // naapurikaupungin id ja etäisyys
-    jaljitus_tiedot jaljitus;
+    std::unordered_set<TownID> naapurit;
 };
-unordered_mapissa tie yhteydet ja teiden pituudet löydetään tehokkaasti.
 
-
+kaupunkien yhteyksien jäljitys dataa ei säilytetä päämuistirakenteessa, sillä ei tuhlata muistia.

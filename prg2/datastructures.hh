@@ -212,7 +212,7 @@ public:
     std::vector<TownID> get_roads_from(TownID id);
 
     // Estimate of performance: O(n)
-    // Short rationale for estimate: huonoimmassa tapauksessa kaikki kaupungit on reitillä
+    // Short rationale for estimate: for looppi käy kaikki kaupungit läpi
     std::vector<TownID> any_route(TownID fromid, TownID toid);
 
     // Non-compulsory phase 2 operations
@@ -222,22 +222,19 @@ public:
     bool remove_road(TownID town1, TownID town2);
 
     // Estimate of performance:O(n)
-    // Short rationale for estimate: Huonoimmassa tapauksessa,
-    // jokaisesta kaupungista on tie jokaiseen muuhun kaupunkiin.
+    // Short rationale for estimate: for looppi käy kaikki kaupungit läpi
     std::vector<TownID> least_towns_route(TownID fromid, TownID toid);
 
     // Estimate of performance:O(n)
-    // Short rationale for estimate: Huonoimmassa tapauksessa,
-    // jokaisesta kaupungista on tie jokaiseen muuhun kaupunkiin.
+    // Short rationale for estimate: for looppi käy kaikki kaupungit läpi
     std::vector<TownID> road_cycle_route(TownID startid);
 
     // Estimate of performance:O(n)
-    // Short rationale for estimate: Huonoimmassa tapauksessa,
-    // jokaisesta kaupungista on tie jokaiseen muuhun kaupunkiin.
+    // Short rationale for estimate: for looppi käy kaikki kaupungit läpi
     std::vector<TownID> shortest_route(TownID fromid, TownID toid);
 
-    // Estimate of performance:
-    // Short rationale for estimate:
+    // Estimate of performance: O(nlog(n))
+    // Short rationale for estimate: köy läpi kaikki kapungit ja niihin liittyvät tiet.
     Distance trim_road_network();
 
 private:
@@ -265,7 +262,7 @@ private:
         int verot;
         std::vector<TownID> vasalllikaupungit;
         TownID isantakaupunki;
-        std::unordered_map<TownID, int> naapurit; // naapurikaupungin id ja etäisyys
+        std::unordered_set<TownID> naapurit; // naapurikaupungin id ja etäisyys
     };
 
     std::unordered_map<TownID, kaupunki_data> kaupungit;

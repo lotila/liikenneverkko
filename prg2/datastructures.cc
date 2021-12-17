@@ -351,8 +351,8 @@ std::vector<std::pair<TownID, TownID>> Datastructures::all_roads()
 
     for (auto& kaupunki : kaupungit)
         for (auto& naapuri : kaupunki.second.naapurit)
-            if (kaupunki.first < naapuri.first)
-                tiet.push_back({kaupunki.first, naapuri.first});
+            if (kaupunki.first < naapuri)
+                tiet.push_back({kaupunki.first, naapuri});
 
     return tiet;
 }
@@ -368,11 +368,8 @@ bool Datastructures::add_road(TownID town1, TownID town2)
            != kaupungin_1_naapurit.find((town2))) // kaupunkien väillä on jo tie
        return false;
 
-   int etaisyys = etaisyys_pisteesta(kaupungit.at(town1).koordinaatit,
-           kaupungit.at(town2).koordinaatit);
-   kaupungin_1_naapurit.insert({town2, etaisyys});
-   kaupungin_2_naapurit.insert({town1, etaisyys});
-
+   kaupungin_1_naapurit.insert(town2);
+   kaupungin_2_naapurit.insert(town1);
    return true;
 }
 
@@ -384,7 +381,7 @@ std::vector<TownID> Datastructures::get_roads_from(TownID id)
     std::vector<TownID> palaute;
     palaute.reserve(naapurit.size());
 
-    for (auto& naapuri : naapurit) palaute.push_back(naapuri.first);
+    for (auto& naapuri : naapurit) palaute.push_back(naapuri);
     return palaute;
 }
 
@@ -446,15 +443,15 @@ std::vector<TownID> Datastructures::road_cycle_route(TownID startid)
             kautavat_kaupungit.push(kaupunki);
             for(auto& naapuri : kaupungit.at(kaupunki).naapurit)
             {
-                if (kaudut_kaupungit.at(naapuri.first).vari == WHITE)
+                if (kaudut_kaupungit.at(naapuri).vari == WHITE)
                 {
-                    kautavat_kaupungit.push(naapuri.first);
-                    kaudut_kaupungit.at(naapuri.first).paluu = kaupunki;
+                    kautavat_kaupungit.push(naapuri);
+                    kaudut_kaupungit.at(naapuri).paluu = kaupunki;
                 }
-                else if (kaudut_kaupungit.at(naapuri.first).vari == GRAY and
-                         naapuri.first != kaudut_kaupungit.at(kaupunki).paluu)
+                else if (kaudut_kaupungit.at(naapuri).vari == GRAY and
+                         naapuri != kaudut_kaupungit.at(kaupunki).paluu)
                 {
-                    viimenen_kaupunki = naapuri.first;
+                    viimenen_kaupunki = naapuri;
                     looppi = false;
                     break;
                 }
@@ -481,7 +478,7 @@ std::vector<TownID> Datastructures::shortest_route(TownID fromid, TownID toid)
 {
     // reitin varella olleet kaupungit
     std::unordered_map<TownID, BFS_jaljitus_tiedot> kaudut_kaupungit;
-    for (auto& kaupunki : kaupungit) kaudut_kaupungit.insert({kaupunki.first, {NO_TOWNID, WHITE, 100000}});
+    for (auto& kaupunki : kaupungit) kaudut_kaupungit.insert({kaupunki.first, {NO_TOWNID, WHITE, 2147483647}});
 
     std::set<std::pair<int, TownID>> kautavat_kaupungit;
 
@@ -494,32 +491,30 @@ std::vector<TownID> Datastructures::shortest_route(TownID fromid, TownID toid)
         std::pair<int, TownID> kaupunki = *kautavat_kaupungit.begin();
         kautavat_kaupungit.erase(kautavat_kaupungit.begin());
 
-        //kautavat_kaupungit.erase(kaupunki);
         for (auto& naapuri : kaupungit.at(kaupunki.second).naapurit)
         {
             int etaisyys = kaudut_kaupungit.at(kaupunki.second).etaisyys + etaisyys_pisteesta(kaupungit.at(kaupunki.second).koordinaatit,
-                                                                                            kaupungit.at(naapuri.first).koordinaatit);
+                                                                                            kaupungit.at(naapuri).koordinaatit);
             bool hinta_pienini = false;
-            if( kaudut_kaupungit.at(naapuri.first).etaisyys > etaisyys)
+            if( kaudut_kaupungit.at(naapuri).etaisyys > etaisyys)
             {
-                kaudut_kaupungit.at(naapuri.first).paluu = kaupunki.second;
-                kaudut_kaupungit.at(naapuri.first).etaisyys = etaisyys;
+                kaudut_kaupungit.at(naapuri).paluu = kaupunki.second;
+                kaudut_kaupungit.at(naapuri).etaisyys = etaisyys;
                 hinta_pienini = true;
 
             }
-            if (kaudut_kaupungit.at(naapuri.first).vari == WHITE)
+            if (kaudut_kaupungit.at(naapuri).vari == WHITE)
             {
-                kaudut_kaupungit.at(naapuri.first).vari = GRAY;
-                kautavat_kaupungit.insert({etaisyys,naapuri.first});
+                kaudut_kaupungit.at(naapuri).vari = GRAY;
+                kautavat_kaupungit.insert({etaisyys,naapuri});
             }
             else if (hinta_pienini)
             {
-                kautavat_kaupungit.insert({etaisyys,naapuri.first});
+                kautavat_kaupungit.insert({etaisyys,naapuri});
             }
         }
-        kaudut_kaupungit.at(kaupunki.second).vari = BLACK;
     }
-    //if (kaudut_kaupungit.at(toid).etaisyys == 0) return {}; // reittiä ei löytynyt
+    if (kaudut_kaupungit.at(toid).etaisyys == 2147483647) return {}; // reittiä ei löytynyt
 
     //järjestetään reitti vektoriin ja palautetaan
     std::vector<TownID> reitti;
@@ -583,6 +578,7 @@ Distance Datastructures::trim_road_network()
         }
         else
         {
+            teiden_pituus += tie.first;
             valitut_kaupungit.at(eka_loutu).insert(
                         valitut_kaupungit.at(toka_loutu).begin(),valitut_kaupungit.at(toka_loutu).end());
             valitut_kaupungit.erase(toka_loutu);
@@ -611,10 +607,10 @@ std::vector<TownID> Datastructures::DFS_etsii_reitin(TownID& fromid, TownID& toi
             kautavat_kaupungit.push(kaupunki);
             for(auto& naapuri : kaupungit.at(kaupunki).naapurit)
             {
-                if (kaudut_kaupungit.at(naapuri.first).vari == WHITE)
+                if (kaudut_kaupungit.at(naapuri).vari == WHITE)
                 {
-                    kautavat_kaupungit.push(naapuri.first);
-                    kaudut_kaupungit.at(naapuri.first).paluu = kaupunki;
+                    kautavat_kaupungit.push(naapuri);
+                    kaudut_kaupungit.at(naapuri).paluu = kaupunki;
                 }
             }
         }
@@ -649,11 +645,11 @@ std::vector<TownID> Datastructures::BFS_etsii_reitin(TownID& fromid, TownID& toi
         kautavat_kaupungit.pop_front();
         for (auto& naapuri : kaupungit.at(kaupunki).naapurit)
         {
-            if (kaudut_kaupungit.at(naapuri.first).vari == WHITE)
+            if (kaudut_kaupungit.at(naapuri).vari == WHITE)
             {
-                kaudut_kaupungit.at(naapuri.first) = {kaupunki, GRAY,
+                kaudut_kaupungit.at(naapuri) = {kaupunki, GRAY,
                         kaudut_kaupungit.at(kaupunki).etaisyys + 1};
-                kautavat_kaupungit.push_back(naapuri.first);
+                kautavat_kaupungit.push_back(naapuri);
             }
         }
     }
